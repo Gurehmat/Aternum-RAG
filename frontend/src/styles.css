@@ -1,0 +1,316 @@
+:root {
+  color: #16201b;
+  background: #f6f7f4;
+  font-family:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 48px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: #6f756f;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: 2rem;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 0;
+  font-size: 1rem;
+  letter-spacing: 0;
+}
+
+.statusGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.metric,
+.panel,
+.results,
+.documents,
+.notice {
+  border: 1px solid #d8ddd4;
+  background: #ffffff;
+  border-radius: 8px;
+}
+
+.metric {
+  min-height: 78px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.metric svg {
+  color: #2d6f65;
+}
+
+.metric span,
+label,
+.sectionHeader span,
+.documentItem p,
+.permissionNote,
+.muted {
+  color: #68716a;
+  font-size: 0.86rem;
+}
+
+.metric strong {
+  display: block;
+  margin-top: 2px;
+  color: #16201b;
+}
+
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.panel,
+.results,
+.documents {
+  padding: 18px;
+}
+
+.panelHeader,
+.sectionHeader,
+.hitHeader,
+.documentItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panelHeader {
+  justify-content: flex-start;
+  margin-bottom: 16px;
+}
+
+.panelHeader svg {
+  color: #8a5a2b;
+}
+
+label {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 13px;
+  font-weight: 650;
+}
+
+input,
+textarea {
+  width: 100%;
+  border: 1px solid #cbd2c8;
+  border-radius: 6px;
+  background: #fbfcfa;
+  color: #16201b;
+  padding: 10px 11px;
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #2d6f65;
+  box-shadow: 0 0 0 3px rgba(45, 111, 101, 0.12);
+}
+
+.inlineFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.primaryButton,
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+}
+
+.primaryButton {
+  min-height: 42px;
+  gap: 8px;
+  border-radius: 6px;
+  background: #2d6f65;
+  color: #ffffff;
+  padding: 0 16px;
+  font-weight: 700;
+}
+
+.primaryButton:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.iconButton {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 38px;
+  border-radius: 6px;
+  background: #e9eee6;
+  color: #26342c;
+}
+
+.iconButton:hover,
+.primaryButton:hover {
+  filter: brightness(0.96);
+}
+
+.danger {
+  background: #f6e7e5;
+  color: #9c3328;
+}
+
+.notice {
+  margin-bottom: 16px;
+  padding: 12px 14px;
+  color: #21372f;
+  background: #edf6f3;
+}
+
+.results,
+.documents {
+  margin-top: 16px;
+}
+
+.sectionHeader {
+  margin-bottom: 14px;
+}
+
+.answer {
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 0 0 14px;
+  padding: 14px;
+  border-radius: 6px;
+  background: #18211d;
+  color: #edf4ee;
+}
+
+.hitList,
+.documentList {
+  display: grid;
+  gap: 12px;
+}
+
+.hit,
+.documentItem {
+  border: 1px solid #dde2d9;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fbfcfa;
+}
+
+.hit p,
+.documentItem p {
+  margin: 8px 0;
+}
+
+.hitHeader span {
+  color: #8a5a2b;
+  font-weight: 800;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.tags span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  border-radius: 999px;
+  background: #e8efe5;
+  color: #2a4437;
+  padding: 4px 8px;
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.permissionNote {
+  margin: 14px 0 0;
+}
+
+@media (max-width: 860px) {
+  .statusGrid,
+  .workspace {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .shell {
+    width: min(100% - 20px, 1180px);
+    padding-top: 18px;
+  }
+
+  .topbar,
+  .documentItem {
+    align-items: flex-start;
+  }
+
+  .inlineFields {
+    grid-template-columns: 1fr;
+  }
+}

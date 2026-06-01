@@ -1,0 +1,6 @@
+fastapi>=0.115
+uvicorn[standard]>=0.34
+SQLAlchemy>=2.0
+psycopg[binary]>=3.2
+pgvector>=0.3
+sentence-transformers>=3.3
