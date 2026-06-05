@@ -2,6 +2,10 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import { Database, FileText, RefreshCw, Search, Shield, Tag, Trash2, Upload } from "lucide-react";
 
 const API_BASE = "http://localhost:8000";
+const DEMO_USER_ID = "00000000-0000-0000-0000-000000000001";
+const DEMO_PROFILE_ID = "00000000-0000-0000-0000-000000000002";
+const DEMO_CIRCLE_TAG = `circle:my_family:${DEMO_PROFILE_ID}`;
+const DEMO_PROFILE_TAG = `profile:${DEMO_PROFILE_ID}`;
 
 type DocumentItem = {
   id: string;
@@ -45,7 +49,7 @@ const emptyIngest = {
   title: "",
   sourceId: "",
   sourceType: "document",
-  tags: "circle:my_family:demo-profile, profile:demo-profile",
+  tags: `${DEMO_CIRCLE_TAG}, ${DEMO_PROFILE_TAG}`,
   text: ""
 };
 
@@ -107,6 +111,8 @@ function App() {
           source_system: "manual",
           source_id: ingest.sourceId || null,
           source_type: ingest.sourceType || "document",
+          user_id: DEMO_USER_ID,
+          profile_id: DEMO_PROFILE_ID,
           tags: splitCsv(ingest.tags),
           metadata: { entered_from: "rag_console" }
         })
@@ -137,7 +143,13 @@ function App() {
           query,
           top_k: topK,
           tag_filters: splitCsv(tagFilters),
-          include_answer: true
+          include_answer: true,
+          viewer: {
+            user_id: DEMO_USER_ID,
+            owned_profile_ids: [DEMO_PROFILE_ID],
+            circle_tags: [DEMO_CIRCLE_TAG],
+            connected_profile_ids: []
+          }
         })
       });
 

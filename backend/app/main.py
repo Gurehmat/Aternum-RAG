@@ -22,7 +22,7 @@ from .ingestion import (
     document_to_response,
     ingest_document,
 )
-from .permissions import PERMISSION_NOTICE, apply_search_filters
+from .permissions import PERMISSION_NOTICE, ViewerPermissionContext, apply_search_filters
 
 CORS_ORIGINS = [origin.strip() for origin in os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")]
 
@@ -32,6 +32,7 @@ class SearchRequest(BaseModel):
     top_k: int = Field(default=5, ge=1, le=25)
     tag_filters: list[str] = Field(default_factory=list)
     include_answer: bool = True
+    viewer: ViewerPermissionContext
 
 
 class SearchHit(BaseModel):
@@ -140,7 +141,11 @@ def query_rag(
         .order_by(cosine_distance)
         .limit(search_request.top_k)
     )
-    search_statement = apply_search_filters(search_statement, search_request.tag_filters)
+    search_statement = apply_search_filters(
+        search_statement,
+        search_request.tag_filters,
+        search_request.viewer,
+    )
 
     search_rows = database_session.execute(search_statement).all()
     search_hits = [
