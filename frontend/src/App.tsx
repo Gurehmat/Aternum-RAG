@@ -1,6 +1,15 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
-import { Database, FileText, RefreshCw, Search, Shield, Tag, Trash2, Upload } from "lucide-react";
-
+import {
+  Database,
+  FileText,
+  RefreshCw,
+  Search,
+  Shield,
+  Tag,
+  Trash2,
+  Upload,
+} from "lucide-react";
+import { ArrowUp } from "lucide-react";
 const API_BASE = "http://localhost:8000";
 
 type DocumentItem = {
@@ -46,7 +55,7 @@ const emptyIngest = {
   sourceId: "",
   sourceType: "document",
   tags: "circle:my_family:demo-profile, profile:demo-profile",
-  text: ""
+  text: "",
 };
 
 function App() {
@@ -59,10 +68,10 @@ function App() {
   const [searchResult, setSearchResult] = useState<SearchResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-
+  const [serverOk, setServerOk] = useState(false)
   const totalChunks = useMemo(
     () => documents.reduce((total, item) => total + item.chunk_count, 0),
-    [documents]
+    [documents],
   );
 
   useEffect(() => {
@@ -108,8 +117,8 @@ function App() {
           source_id: ingest.sourceId || null,
           source_type: ingest.sourceType || "document",
           tags: splitCsv(ingest.tags),
-          metadata: { entered_from: "rag_console" }
-        })
+          metadata: { entered_from: "rag_console" },
+        }),
       });
 
       if (!response.ok) {
@@ -137,8 +146,8 @@ function App() {
           query,
           top_k: topK,
           tag_filters: splitCsv(tagFilters),
-          include_answer: true
-        })
+          include_answer: true,
+        }),
       });
 
       if (!response.ok) {
@@ -156,7 +165,9 @@ function App() {
     setBusy(true);
     setMessage(null);
     try {
-      const response = await fetch(`${API_BASE}/api/documents/${id}`, { method: "DELETE" });
+      const response = await fetch(`${API_BASE}/api/documents/${id}`, {
+        method: "DELETE",
+      });
       if (!response.ok) {
         throw new Error(await response.text());
       }
@@ -168,6 +179,14 @@ function App() {
     }
   }
 
+  async function handleReq() {
+    const res = await fetch(`${API_BASE}/search`, { method: "post" }).then(
+      (res) => res.json(),
+    );
+    setServerOk(res?.status === "ok")
+    console.log(res);
+  }
+
   return (
     <main className="shell">
       <header className="topbar">
@@ -175,15 +194,31 @@ function App() {
           <p className="eyebrow">Aternum RAG Sandbox</p>
           <h1>Retrieval Console</h1>
         </div>
-        <button className="iconButton" title="Refresh" onClick={() => void refreshAll()}>
+        <button
+          className="iconButton"
+          title="Refresh"
+          onClick={() => void refreshAll()}
+        >
           <RefreshCw size={18} />
         </button>
       </header>
 
       <section className="statusGrid" aria-label="Service status">
-        <Metric icon={<Database size={18} />} label="Database" value={health?.database ?? "offline"} />
-        <Metric icon={<FileText size={18} />} label="Documents" value={String(documents.length)} />
-        <Metric icon={<Tag size={18} />} label="Chunks" value={String(totalChunks)} />
+        <Metric
+          icon={<Database size={18} />}
+          label="Database"
+          value={health?.database ?? "offline"}
+        />
+        <Metric
+          icon={<FileText size={18} />}
+          label="Documents"
+          value={String(documents.length)}
+        />
+        <Metric
+          icon={<Tag size={18} />}
+          label="Chunks"
+          value={String(totalChunks)}
+        />
         <Metric icon={<Shield size={18} />} label="Permissions" value="TODO" />
       </section>
 
@@ -240,14 +275,18 @@ function App() {
               Title
               <input
                 value={ingest.title}
-                onChange={(event) => setIngest({ ...ingest, title: event.target.value })}
+                onChange={(event) =>
+                  setIngest({ ...ingest, title: event.target.value })
+                }
               />
             </label>
             <label>
               Source ID
               <input
                 value={ingest.sourceId}
-                onChange={(event) => setIngest({ ...ingest, sourceId: event.target.value })}
+                onChange={(event) =>
+                  setIngest({ ...ingest, sourceId: event.target.value })
+                }
               />
             </label>
           </div>
@@ -255,14 +294,18 @@ function App() {
             Tags
             <input
               value={ingest.tags}
-              onChange={(event) => setIngest({ ...ingest, tags: event.target.value })}
+              onChange={(event) =>
+                setIngest({ ...ingest, tags: event.target.value })
+              }
             />
           </label>
           <label>
             Text
             <textarea
               value={ingest.text}
-              onChange={(event) => setIngest({ ...ingest, text: event.target.value })}
+              onChange={(event) =>
+                setIngest({ ...ingest, text: event.target.value })
+              }
               rows={8}
               required
             />
@@ -307,21 +350,64 @@ function App() {
             <article className="documentItem" key={item.id}>
               <div>
                 <strong>{item.title || item.source_id || "Untitled"}</strong>
-                <p>{item.source_system} / {item.source_type} / {item.chunk_count} chunks</p>
+                <p>
+                  {item.source_system} / {item.source_type} / {item.chunk_count}{" "}
+                  chunks
+                </p>
                 <TagList tags={item.tags} />
               </div>
-              <button className="iconButton danger" title="Delete" onClick={() => void removeDocument(item.id)}>
+              <button
+                className="iconButton danger"
+                title="Delete"
+                onClick={() => void removeDocument(item.id)}
+              >
                 <Trash2 size={17} />
               </button>
             </article>
           ))}
         </div>
       </section>
+
+      <section className="flex justify-center mt-8 ">
+        {/* Phone */}
+        <div className="rounded-xl flex flex-col relative  w-100 h-150 border border-black/50">
+          <div className=" flex items-center gap-2 border-b border-black/25 justify-center h-12 w-full">
+            <p className="text-center text-base">Memoria</p>
+            <div className={`w-2 h-2 rounded-full ${serverOk ?'bg-green-500' : "bg-red-500"}` }></div>
+          </div>
+
+          {/* Message Content */}
+
+          <div className="overflow-hidden p-4  flex-1 flex-col flex bg-gray-200">
+            <div className="max-w-2/3 text-black rounded-lg self-end bg-green-300 px-3 py-2">
+              hey
+            </div>
+          </div>
+
+          <div className=" flex gap-2 w-full p-2">
+            <input type="text" className="" name="query" id="query" />
+            <button
+              onClick={handleReq}
+              className="px-4 py-2 rounded-2xl bg-green-800 text-white"
+            >
+              <ArrowUp></ArrowUp>
+            </button>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
 
-function Metric({ icon, label, value }: { icon: JSX.Element; label: string; value: string }) {
+function Metric({
+  icon,
+  label,
+  value,
+}: {
+  icon: JSX.Element;
+  label: string;
+  value: string;
+}) {
   return (
     <div className="metric">
       {icon}
