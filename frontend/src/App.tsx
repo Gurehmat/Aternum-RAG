@@ -10,6 +10,7 @@ import {
   Upload,
 } from "lucide-react";
 import { ArrowUp } from "lucide-react";
+import MessageSection from "./MessageSection";
 const API_BASE = "http://localhost:8000";
 
 type DocumentItem = {
@@ -68,7 +69,7 @@ function App() {
   const [searchResult, setSearchResult] = useState<SearchResponse | null>(null);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [serverOk, setServerOk] = useState(false)
+
   const totalChunks = useMemo(
     () => documents.reduce((total, item) => total + item.chunk_count, 0),
     [documents],
@@ -179,13 +180,7 @@ function App() {
     }
   }
 
-  async function handleReq() {
-    const res = await fetch(`${API_BASE}/search`, { method: "post" }).then(
-      (res) => res.json(),
-    );
-    setServerOk(res?.status === "ok")
-    console.log(res);
-  }
+ 
 
   return (
     <main className="shell">
@@ -368,33 +363,7 @@ function App() {
         </div>
       </section>
 
-      <section className="flex justify-center mt-8 ">
-        {/* Phone */}
-        <div className="rounded-xl flex flex-col relative  w-100 h-150 border border-black/50">
-          <div className=" flex items-center gap-2 border-b border-black/25 justify-center h-12 w-full">
-            <p className="text-center text-base">Memoria</p>
-            <div className={`w-2 h-2 rounded-full ${serverOk ?'bg-green-500' : "bg-red-500"}` }></div>
-          </div>
-
-          {/* Message Content */}
-
-          <div className="overflow-hidden p-4  flex-1 flex-col flex bg-gray-200">
-            <div className="max-w-2/3 text-black rounded-lg self-end bg-green-300 px-3 py-2">
-              hey
-            </div>
-          </div>
-
-          <div className=" flex gap-2 w-full p-2">
-            <input type="text" className="" name="query" id="query" />
-            <button
-              onClick={handleReq}
-              className="px-4 py-2 rounded-2xl bg-green-800 text-white"
-            >
-              <ArrowUp></ArrowUp>
-            </button>
-          </div>
-        </div>
-      </section>
+      <MessageSection  />
     </main>
   );
 }
